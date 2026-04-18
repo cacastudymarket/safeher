@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* LEFT SIDE */
+    .auth-left {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -100px;
+      right: -100px;
+    }
+
+    .auth-left::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      bottom: -80px;
+      left: -80px;
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .auth-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .auth-logo img {
+      width: 48px;
+      height: 48px;
+      filter: brightness(0) invert(1);
+    }
+
+    .auth-tagline {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-bottom: 48px;
+    }
+
+    .auth-features {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .auth-feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .auth-feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .auth-feature h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .auth-feature p {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    /* RIGHT SIDE */
+    .auth-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      background: var(--bg);
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .auth-form h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .auth-form .subtitle {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123,107,168,0.1);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+    }
+
+    .input-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      accent-color: var(--primary);
+    }
+
+    .forgot-password {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 14px;
+      font-size: 15px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider span {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .social-login {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .social-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.05);
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .auth-switch a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .auth-switch a:hover {
+      text-decoration: underline;
+    }
+
+    /* EMERGENCY ACCESS */
+    .emergency-access {
+      margin-top: 24px;
+      padding: 16px;
+      background: rgba(229,62,62,0.06);
+      border-radius: var(--radius);
+      border: 1px solid rgba(229,62,62,0.2);
+      text-align: center;
+    }
+
+    .emergency-access p {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .auth-page {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-left {
+        display: none;
+      }
+
+      .auth-right {
+        padding: 40px 24px;
+        min-height: 100vh;
+        align-items: flex-start;
+        padding-top: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- LEFT -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <div class="auth-logo">
+          <img src="../assets/images/logo.png" alt="SafeHer">
+          SafeHer
+        </div>
+        <p class="auth-tagline">Empowering & Securing Women</p>
+
+        <div class="auth-features">
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🆘</div>
+            <div>
+              <h4>Tombol Darurat 24/7</h4>
+              <p>Bantuan satu klik kapan pun kamu butuhkan</p>
+            </div>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">💬</div>
+            <div>
+              <h4>Konsultasi Ahli Terverifikasi</h4>
+              <p>Akses psikolog, psikiater, dan ahli hukum</p>
+            </div>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🤝</div>
+            <div>
+              <h4>Komunitas Perempuan</h4>
+              <p>Saling mendukung dan melindungi bersama</p>
+            </div>
+          </div>
+          <div class="auth-feature">
+            <div class="auth-feature-icon">🔒</div>
+            <div>
+              <h4>Aman & Terpercaya</h4>
+              <p>Platform khusus perempuan yang terverifikasi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="auth-right">
+      <div class="auth-form">
+        <h2>Selamat Datang 💜</h2>
+        <p class="subtitle">Masuk ke akun SafeHer kamu</p>
+
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📧</span>
+            <input type="email" id="loginEmail" placeholder="email@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="loginPassword" placeholder="Masukkan password">
+            <button class="input-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox"> Ingat saya
+          </label>
+          <a href="#" class="forgot-password">Lupa password?</a>
+        </div>
+
+        <button class="btn btn-primary btn-login" onclick="handleLogin()">
+          Masuk ke SafeHer 💜
+        </button>
+
+        <div class="divider"><span>atau masuk dengan</span></div>
+
+        <div class="social-login">
+          <button class="social-btn">
+            <span>🌐</span> Masuk dengan Google
+          </button>
+        </div>
+
+        <div class="auth-switch">
+          Belum punya akun? <a href="register.html">Daftar sekarang</a>
+        </div>
+
+        <div class="emergency-access">
+          <p>Dalam situasi darurat? Akses tanpa login:</p>
+          <a href="darurat.html" class="btn btn-danger" style="display:inline-flex">🆘 Akses Darurat</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    // Apply saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        alert('Email dan password wajib diisi!');
+        return;
+      }
+
+      // Simulasi login
+      alert('✅ Login berhasil! Selamat datang di SafeHer 💜');
+      window.location.href = '../index.html';
+    }
+
+    // Bot toggle
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>

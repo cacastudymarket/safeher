@@ -105,3 +105,112 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+
+// ===== GEMINI BOT AI =====
+const GEMINI_API_KEY = 'MASUKKAN_API_KEY_GEMINI_KAMU';
+
+const SYSTEM_PROMPT = `Kamu adalah SafeHer AI, asisten virtual platform SafeHer yang membantu perempuan Indonesia.
+
+SafeHer adalah platform perlindungan dan pemberdayaan perempuan dengan fitur:
+- 🆘 Tombol Darurat (SOS)
+- 📖 Ruang Cerita (berbagi pengalaman anonim)
+- 📚 Pusat Edukasi (artikel hak perempuan)
+- 🗺️ Safety Map (laporan kejadian real-time)
+- 🤝 Komunitas & Buddy System
+- ⚖️ Panduan Lapor ke polisi
+- 💬 Konsultasi ahli hukum & psikolog
+- 💝 Donasi transparan
+- 📊 Mood Tracker
+- 🏅 Badge & Apresiasi
+
+Tugasmu:
+1. Panduan fitur SafeHer
+2. Rekomendasi fitur sesuai kebutuhan user
+3. Info hotline darurat
+4. Generate tiket pengaduan error
+5. Dukungan emosional ringan
+
+Aturan:
+- Selalu gunakan bahasa Indonesia yang hangat dan suportif
+- Jangan memberikan diagnosis medis atau nasihat hukum spesifik
+- Untuk kondisi darurat selalu arahkan ke fitur SOS atau hubungi 110/129
+- Jawab singkat dan jelas, maksimal 3-4 kalimat
+- Selalu akhiri dengan emoji 💜`;
+
+async function sendToGemini(message) {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${AIzaSyAQEXVyXfxSlsVdv79JOSToRYTnHm4Ka7I}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: SYSTEM_PROMPT + '\n\nUser: ' + message }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 256,
+          }
+        })
+      }
+    );
+
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maaf, aku tidak bisa menjawab saat ini. Coba lagi ya 💜';
+  } catch (error) {
+    return 'Maaf, terjadi kesalahan koneksi. Pastikan kamu terhubung ke internet 💜';
+  }
+}
+
+function addBotMessage(text, isUser = false) {
+  const messages = document.getElementById('botMessages');
+  if (!messages) return;
+
+  const div = document.createElement('div');
+  div.className = 'bot-message' + (isUser ? ' user' : '');
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+async function handleBotSend() {
+  const input = document.getElementById('botInput');
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  input.value = '';
+  addBotMessage(message, true);
+
+  // Typing indicator
+  const messages = document.getElementById('botMessages');
+  const typing = document.createElement('div');
+  typing.className = 'bot-message';
+  typing.id = 'typingIndicator';
+  typing.textContent = '⏳ Mengetik...';
+  messages?.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
+
+  const reply = await sendToGemini(message);
+
+  // Remove typing indicator
+  document.getElementById('typingIndicator')?.remove();
+  addBotMessage(reply);
+}
+
+// Bot send button & enter key
+document.addEventListener('DOMContentLoaded', () => {
+  const botSend = document.getElementById('botSend');
+  const botInput = document.getElementById('botInput');
+
+  botSend?.addEventListener('click', handleBotSend);
+  botInput?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleBotSend();
+  });
+});

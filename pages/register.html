@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .auth-left {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -100px;
+      right: -100px;
+    }
+
+    .auth-left::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      bottom: -80px;
+      left: -80px;
+    }
+
+    .auth-left-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .auth-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .auth-logo img {
+      width: 48px;
+      height: 48px;
+      filter: brightness(0) invert(1);
+    }
+
+    .auth-tagline {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-bottom: 48px;
+    }
+
+    .auth-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .auth-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .auth-step h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .auth-step p {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .auth-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 440px;
+      padding: 20px 0;
+    }
+
+    .auth-form h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .auth-form .subtitle {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+
+    /* ROLE SELECTOR */
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .role-card {
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .role-card:hover {
+      border-color: var(--primary);
+    }
+
+    .role-card.active {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.08);
+    }
+
+    .role-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .role-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .role-card p {
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-wrapper input:focus,
+    .input-wrapper select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123,107,168,0.1);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+    }
+
+    .input-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* EXPERT FIELDS */
+    .expert-fields {
+      display: none;
+      background: rgba(123,107,168,0.05);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid rgba(123,107,168,0.2);
+      margin-bottom: 14px;
+    }
+
+    .expert-fields.active {
+      display: block;
+    }
+
+    .expert-fields h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+
+    /* UPLOAD */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 14px;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.05);
+    }
+
+    .upload-area p {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 8px;
+    }
+
+    /* TERMS */
+    .terms-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .terms-check input {
+      accent-color: var(--primary);
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .terms-check a {
+      color: var(--primary);
+    }
+
+    /* GENDER WARNING */
+    .gender-warning {
+      display: none;
+      background: rgba(229,62,62,0.08);
+      border: 1px solid rgba(229,62,62,0.3);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #C53030;
+      margin-bottom: 14px;
+    }
+
+    .gender-warning.active {
+      display: block;
+    }
+
+    /* PROGRESS STEPS */
+    .form-steps {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .form-step {
+      flex: 1;
+      height: 4px;
+      border-radius: 50px;
+      background: var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .form-step.active {
+      background: var(--primary);
+    }
+
+    .auth-switch {
+      text-align: center;
+      font-size: 14px;
+      color: var(--text-light);
+      margin-top: 16px;
+    }
+
+    .auth-switch a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .auth-page {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-left {
+        display: none;
+      }
+
+      .auth-right {
+        padding: 24px;
+        padding-top: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-page">
+    <!-- LEFT -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <div class="auth-logo">
+          <img src="../assets/images/logo.png" alt="SafeHer">
+          SafeHer
+        </div>
+        <p class="auth-tagline">Empowering & Securing Women</p>
+
+        <div class="auth-steps">
+          <div class="auth-step">
+            <div class="step-num">1</div>
+            <div>
+              <h4>Pilih Tipe Akun</h4>
+              <p>Member biasa atau ahli profesional</p>
+            </div>
+          </div>
+          <div class="auth-step">
+            <div class="step-num">2</div>
+            <div>
+              <h4>Isi Data Diri</h4>
+              <p>Nama, email, dan informasi dasar</p>
+            </div>
+          </div>
+          <div class="auth-step">
+            <div class="step-num">3</div>
+            <div>
+              <h4>Verifikasi Identitas</h4>
+              <p>Upload KTP untuk memastikan keamanan</p>
+            </div>
+          </div>
+          <div class="auth-step">
+            <div class="step-num">4</div>
+            <div>
+              <h4>Verifikasi Nomor HP</h4>
+              <p>Konfirmasi via OTP untuk keamanan akun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="auth-right">
+      <div class="auth-form">
+        <h2>Bergabung dengan SafeHer 💜</h2>
+        <p class="subtitle">Buat akun dan mulai perjalananmu bersama kami</p>
+
+        <!-- PROGRESS -->
+        <div class="form-steps">
+          <div class="form-step active"></div>
+          <div class="form-step active"></div>
+          <div class="form-step"></div>
+          <div class="form-step"></div>
+        </div>
+
+        <!-- ROLE SELECTOR -->
+        <p style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">Daftar sebagai:</p>
+        <div class="role-selector">
+          <div class="role-card active" id="roleMember" onclick="selectRole('member')">
+            <div class="role-icon">👩</div>
+            <h4>Member SafeHer</h4>
+            <p>Perempuan yang ingin menggunakan layanan SafeHer</p>
+          </div>
+          <div class="role-card" id="roleExpert" onclick="selectRole('expert')">
+            <div class="role-icon">👩‍⚕️</div>
+            <h4>Ahli Profesional</h4>
+            <p>Ahli hukum, psikolog, atau psikiater terverifikasi</p>
+          </div>
+        </div>
+
+        <!-- BASIC FIELDS -->
+        <div class="form-group">
+          <label>Nama Lengkap</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="regName" placeholder="Nama lengkapmu">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📧</span>
+            <input type="email" id="regEmail" placeholder="email@example.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nomor HP</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="regPhone" placeholder="+62 812-xxxx-xxxx">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Jenis Kelamin</label>
+          <div class="input-wrapper">
+            <span class="input-icon">⚧️</span>
+            <select id="regGender" onchange="checkGender(this)">
+              <option value="">Pilih jenis kelamin</option>
+              <option value="perempuan">Perempuan</option>
+              <option value="laki">Laki-laki</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- GENDER WARNING -->
+        <div class="gender-warning" id="genderWarning">
+          ⚠️ SafeHer adalah platform khusus perempuan. Kamu tetap bisa bergabung sebagai <strong>Ahli atau Relawan</strong> untuk membantu komunitas kami.
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regPassword" placeholder="Min. 8 karakter">
+            <button class="input-toggle" onclick="togglePassword('regPassword', this)">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Konfirmasi Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="regConfirmPassword" placeholder="Ulangi password">
+            <button class="input-toggle" onclick="togglePassword('regConfirmPassword', this)">👁️</button>
+          </div>
+        </div>
+
+        <!-- EXPERT FIELDS -->
+        <div class="expert-fields" id="expertFields">
+          <h4>📋 Data Profesional (Wajib untuk Ahli)</h4>
+
+          <div class="form-group">
+            <label>Bidang Keahlian</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🎓</span>
+              <select>
+                <option value="">Pilih bidang</option>
+                <option>⚖️ Ahli Hukum</option>
+                <option>🧠 Psikolog</option>
+                <option>🏥 Psikiater</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Nomor STR / SIP / Lisensi</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📄</span>
+              <input type="text" placeholder="Nomor lisensi profesional">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Lokasi Praktik</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📍</span>
+              <input type="text" placeholder="Kota / Alamat praktik">
+            </div>
+          </div>
+
+          <div class="upload-area" onclick="document.getElementById('uploadDoc').click()">
+            <span style="font-size:2rem">📄</span>
+            <p>Upload Dokumen Verifikasi<br><small>(KTP + Ijazah/SIP/STR)</small></p>
+            <input type="file" id="uploadDoc" style="display:none" accept=".pdf,.jpg,.png" multiple>
+          </div>
+
+          <div style="background:rgba(196,164,74,0.1);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--accent)">
+            ⏳ Akun ahli akan aktif setelah verifikasi dokumen oleh tim SafeHer (1-3 hari kerja)
+          </div>
+        </div>
+
+        <!-- KTP UPLOAD -->
+        <div class="form-group" id="ktpUpload">
+          <label>Upload KTP / Identitas</label>
+          <div class="upload-area" onclick="document.getElementById('uploadKTP').click()">
+            <span style="font-size:2rem">🪪</span>
+            <p>Klik untuk upload foto KTP<br><small>JPG, PNG, atau PDF (maks 5MB)</small></p>
+            <input type="file" id="uploadKTP" style="display:none" accept=".pdf,.jpg,.png">
+          </div>
+        </div>
+
+        <!-- TERMS -->
+        <label class="terms-check">
+          <input type="checkbox" id="agreeTerms">
+          Saya menyetujui <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> SafeHer. Saya memahami bahwa SafeHer adalah platform khusus perempuan.
+        </label>
+
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="handleRegister()">
+          Daftar Sekarang 💜
+        </button>
+
+        <div class="auth-switch">
+          Sudah punya akun? <a href="login.html">Masuk di sini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    let currentRole = 'member';
+
+    function selectRole(role) {
+      currentRole = role;
+      document.getElementById('roleMember').classList.toggle('active', role === 'member');
+      document.getElementById('roleExpert').classList.toggle('active', role === 'expert');
+      document.getElementById('expertFields').classList.toggle('active', role === 'expert');
+    }
+
+    function checkGender(select) {
+      const warning = document.getElementById('genderWarning');
+      if (select.value === 'laki') {
+        warning.classList.add('active');
+        // Auto switch to expert role
+        selectRole('expert');
+      } else {
+        warning.classList.remove('active');
+      }
+    }
+
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const gender = document.getElementById('regGender').value;
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const agreeTerms = document.getElementById('agreeTerms').checked;
+
+      if (!name || !email || !phone || !gender || !password) {
+        alert('Semua field wajib diisi!');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert('Password dan konfirmasi password tidak cocok!');
+        return;
+      }
+
+      if (password.length < 8) {
+        alert('Password minimal 8 karakter!');
+        return;
+      }
+
+      if (!agreeTerms) {
+        alert('Kamu harus menyetujui syarat & ketentuan!');
+        return;
+      }
+
+      if (currentRole === 'expert') {
+        alert('✅ Pendaftaran ahli berhasil! Dokumenmu sedang diverifikasi oleh tim SafeHer (1-3 hari kerja). Kamu akan mendapat notifikasi via email. 💜');
+      } else {
+        alert('✅ Pendaftaran berhasil! Kode OTP telah dikirim ke nomor HP kamu. Silakan verifikasi untuk mengaktifkan akun. 💜');
+      }
+
+      window.location.href = 'login.html';
+    }
+
+    // Bot toggle
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>

@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donasi — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .page-hero {
+      padding: 140px 0 60px;
+      background: linear-gradient(135deg, rgba(123,107,168,0.08), rgba(201,123,138,0.08));
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* STATS */
+    .donation-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 40px 0;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-card p {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    /* HOW IT WORKS */
+    .how-it-works {
+      background: linear-gradient(135deg, rgba(123,107,168,0.06), rgba(201,123,138,0.06));
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 48px;
+    }
+
+    .how-it-works h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .how-step {
+      text-align: center;
+    }
+
+    .how-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .how-step h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .how-step p {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* DONATION CASES */
+    .cases-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      padding-bottom: 60px;
+    }
+
+    .case-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .case-card:hover {
+      box-shadow: 0 8px 30px var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .case-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .case-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-dot.active { background: #48BB78; }
+    .status-dot.urgent { background: #E53E3E; }
+    .status-dot.completed { background: #A0AEC0; }
+
+    .case-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .case-card p {
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* PROGRESS BAR */
+    .donation-progress {
+      margin-bottom: 16px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .progress-info .collected {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .progress-info .target {
+      color: var(--text-light);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.5s ease;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 6px;
+    }
+
+    .case-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .case-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* DONATE MODAL */
+    .donate-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .donate-modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .amount-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .amount-btn {
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+    }
+
+    .amount-btn.active,
+    .amount-btn:hover {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.1);
+      color: var(--primary);
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .payment-btn {
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .payment-btn.active,
+    .payment-btn:hover {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.1);
+    }
+
+    /* TRANSPARENCY */
+    .transparency-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .transparency-card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .update-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .update-item {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .update-date {
+      color: var(--text-light);
+      white-space: nowrap;
+      min-width: 80px;
+    }
+
+    .update-text {
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* SIDEBAR */
+    .donation-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .process-step {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .process-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .cases-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .donation-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .how-steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .donation-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .amount-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="badge badge-primary" style="margin-bottom:20px;display:inline-flex;">💝 Donasi</span>
+      <h1>Bantu Sesama <br>Perempuan 💜</h1>
+      <p>Setiap donasi yang kamu berikan membantu perempuan mendapatkan bantuan hukum dan psikologis yang mereka butuhkan. Transparan dan terpercaya.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+
+      <!-- STATS -->
+      <div class="donation-stats">
+        <div class="stat-card">
+          <h3>Rp 127M</h3>
+          <p>Total Dana Terkumpul</p>
+        </div>
+        <div class="stat-card">
+          <h3>89</h3>
+          <p>Kasus Terbantu</p>
+        </div>
+        <div class="stat-card">
+          <h3>2.4K</h3>
+          <p>Total Donatur</p>
+        </div>
+        <div class="stat-card">
+          <h3>100%</h3>
+          <p>Transparansi Dana</p>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="how-it-works">
+        <h2>🔄 Bagaimana Proses Donasi SafeHer?</h2>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-icon">📝</div>
+            <h4>1. Pengajuan</h4>
+            <p>Korban mengajukan kebutuhan donasi via email ke tim SafeHer</p>
+          </div>
+          <div class="how-step">
+            <div class="how-icon">🔍</div>
+            <h4>2. Verifikasi</h4>
+            <p>Tim SafeHer & ahli memverifikasi dan memvalidasi kebutuhan</p>
+          </div>
+          <div class="how-step">
+            <div class="how-icon">📢</div>
+            <h4>3. Publikasi</h4>
+            <p>Kasus yang terverifikasi dipublikasikan di platform SafeHer</p>
+          </div>
+          <div class="how-step">
+            <div class="how-icon">📊</div>
+            <h4>4. Transparansi</h4>
+            <p>Setiap penggunaan dana diupdate secara real-time & transparan</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASES -->
+      <div class="cases-layout">
+        <div>
+          <div class="section-header" style="text-align:left;margin-bottom:24px">
+            <h2 class="section-title">💝 Kasus yang Membutuhkan Bantuan</h2>
+          </div>
+
+          <!-- CASE 1 -->
+          <div class="case-card">
+            <div class="case-header">
+              <div>
+                <span class="badge badge-primary">⚖️ Bantuan Hukum</span>
+              </div>
+              <div class="case-status">
+                <div class="status-dot urgent"></div>
+                <span style="color:#E53E3E">Mendesak</span>
+              </div>
+            </div>
+            <h3>Bantuan Hukum untuk Korban KDRT di Surabaya</h3>
+            <p>Seorang ibu dengan 2 anak membutuhkan bantuan hukum untuk mengurus gugatan cerai dan perlindungan dari mantan suami yang masih mengancam. Dana akan digunakan untuk biaya pengacara dan tempat perlindungan sementara.</p>
+
+            <div class="donation-progress">
+              <div class="progress-info">
+                <span class="collected">Rp 8.500.000</span>
+                <span class="target">dari Rp 15.000.000</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:57%"></div>
+              </div>
+              <div class="progress-meta">
+                <span>57% terkumpul</span>
+                <span>⏰ Sisa 12 hari</span>
+              </div>
+            </div>
+
+            <div class="transparency-card">
+              <h4>📊 Update Penggunaan Dana</h4>
+              <div class="update-list">
+                <div class="update-item">
+                  <span class="update-date">10 Apr</span>
+                  <span class="update-text">Rp 2.000.000 — Biaya konsultasi pengacara tahap 1 ✅</span>
+                </div>
+                <div class="update-item">
+                  <span class="update-date">8 Apr</span>
+                  <span class="update-text">Rp 1.500.000 — Biaya tempat perlindungan sementara ✅</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="case-footer">
+              <div class="case-meta">
+                <span>👥 124 donatur</span>
+                <span>✅ Terverifikasi Tim SafeHer</span>
+              </div>
+              <button class="btn btn-primary" onclick="openDonateModal('Korban KDRT Surabaya')">💝 Donasi Sekarang</button>
+            </div>
+          </div>
+
+          <!-- CASE 2 -->
+          <div class="case-card">
+            <div class="case-header">
+              <div>
+                <span class="badge badge-secondary">🧠 Bantuan Psikologi</span>
+              </div>
+              <div class="case-status">
+                <div class="status-dot active"></div>
+                <span style="color:#48BB78">Aktif</span>
+              </div>
+            </div>
+            <h3>Terapi Psikologi untuk Survivor Pelecehan Seksual</h3>
+            <p>Seorang mahasiswi 20 tahun membutuhkan bantuan biaya terapi psikologi jangka panjang setelah mengalami pelecehan seksual. Terapi EMDR yang direkomendasikan membutuhkan 10-15 sesi.</p>
+
+            <div class="donation-progress">
+              <div class="progress-info">
+                <span class="collected">Rp 4.200.000</span>
+                <span class="target">dari Rp 7.500.000</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:56%"></div>
+              </div>
+              <div class="progress-meta">
+                <span>56% terkumpul</span>
+                <span>⏰ Sisa 20 hari</span>
+              </div>
+            </div>
+
+            <div class="transparency-card">
+              <h4>📊 Update Penggunaan Dana</h4>
+              <div class="update-list">
+                <div class="update-item">
+                  <span class="update-date">12 Apr</span>
+                  <span class="update-text">Rp 1.400.000 — Sesi terapi 1-3 selesai, kondisi membaik ✅</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="case-footer">
+              <div class="case-meta">
+                <span>👥 89 donatur</span>
+                <span>✅ Terverifikasi Tim SafeHer</span>
+              </div>
+              <button class="btn btn-primary" onclick="openDonateModal('Terapi Psikologi Mahasiswi')">💝 Donasi Sekarang</button>
+            </div>
+          </div>
+
+          <!-- CASE 3 COMPLETED -->
+          <div class="case-card" style="opacity:0.7">
+            <div class="case-header">
+              <div>
+                <span class="badge badge-primary">⚖️ Bantuan Hukum</span>
+              </div>
+              <div class="case-status">
+                <div class="status-dot completed"></div>
+                <span style="color:#A0AEC0">Selesai</span>
+              </div>
+            </div>
+            <h3>Bantuan Hukum Kasus Revenge Porn — Jakarta</h3>
+            <p>Kasus berhasil diselesaikan. Pelaku mendapat hukuman sesuai UU ITE. Terima kasih kepada seluruh donatur yang telah membantu! 💜</p>
+
+            <div class="donation-progress">
+              <div class="progress-info">
+                <span class="collected">Rp 12.000.000</span>
+                <span class="target">dari Rp 12.000.000</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:100%"></div>
+              </div>
+              <div class="progress-meta">
+                <span>✅ 100% terkumpul & digunakan</span>
+                <span>Selesai 5 Apr 2024</span>
+              </div>
+            </div>
+
+            <div class="case-footer">
+              <div class="case-meta">
+                <span>👥 312 donatur</span>
+                <span>✅ Kasus Selesai</span>
+              </div>
+              <button class="btn btn-secondary" disabled>Kasus Selesai</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="donation-sidebar">
+          <div class="sidebar-card">
+            <h3>📋 Proses Verifikasi Donasi</h3>
+            <div class="process-steps">
+              <div class="process-step">
+                <div class="process-num">1</div>
+                <span>Korban kirim email ke tim@safeher.id dengan detail kebutuhan</span>
+              </div>
+              <div class="process-step">
+                <div class="process-num">2</div>
+                <span>Tim SafeHer memverifikasi identitas dan kebutuhan</span>
+              </div>
+              <div class="process-step">
+                <div class="process-num">3</div>
+                <span>Konsultasi dengan ahli hukum/psikolog untuk validasi</span>
+              </div>
+              <div class="process-step">
+                <div class="process-num">4</div>
+                <span>Kasus dipublikasikan setelah disetujui tim</span>
+              </div>
+              <div class="process-step">
+                <div class="process-num">5</div>
+                <span>Dana disalurkan langsung ke kebutuhan terverifikasi</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>🔒 Keamanan Dana</h3>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:8px;font-size:13px;color:var(--text-light)">
+                <span>✅</span><span>Dana dikelola langsung tim SafeHer</span>
+              </div>
+              <div style="display:flex;gap:8px;font-size:13px;color:var(--text-light)">
+                <span>✅</span><span>Laporan penggunaan dana real-time</span>
+              </div>
+              <div style="display:flex;gap:8px;font-size:13px;color:var(--text-light)">
+                <span>✅</span><span>Audit keuangan berkala</span>
+              </div>
+              <div style="display:flex;gap:8px;font-size:13px;color:var(--text-light)">
+                <span>✅</span><span>Bukti transfer tersimpan</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card" style="background:linear-gradient(135deg,rgba(123,107,168,0.1),rgba(201,123,138,0.1))">
+            <h3>📧 Ajukan Kebutuhan Donasi</h3>
+            <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">Butuh bantuan dana? Kirim email ke tim kami untuk proses verifikasi.</p>
+            <a href="mailto:donasi@safeher.id" class="btn btn-primary" style="width:100%;justify-content:center">📧 Kirim Email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DONATE MODAL -->
+  <div class="donate-modal" id="donateModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>💝 Donasi untuk <span id="modalCaseName"></span></h3>
+        <button class="modal-close" onclick="closeDonateModal()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Nominal Donasi</label>
+        <div class="amount-options">
+          <button class="amount-btn" onclick="selectAmount(this, 25000)">Rp 25.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 50000)">Rp 50.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 100000)">Rp 100.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 250000)">Rp 250.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 500000)">Rp 500.000</button>
+          <button class="amount-btn" onclick="selectAmount(this, 0)">Nominal Lain</button>
+        </div>
+        <input type="number" id="customAmount" placeholder="Masukkan nominal lain (Rp)" style="display:none;margin-top:8px">
+      </div>
+
+      <div class="form-group">
+        <label>Nama Donatur (opsional)</label>
+        <input type="text" placeholder="Kosongkan jika ingin anonim">
+      </div>
+
+      <div class="form-group">
+        <label>Pesan Dukungan (opsional)</label>
+        <textarea placeholder="Tuliskan pesan dukunganmu..." style="min-height:80px"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Metode Pembayaran</label>
+        <div class="payment-methods">
+          <button class="payment-btn active">🏦 Transfer Bank</button>
+          <button class="payment-btn">💳 QRIS</button>
+          <button class="payment-btn">📱 GoPay/OVO</button>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="confirmDonation()">
+        💝 Konfirmasi Donasi
+      </button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    fetch('../components/navbar.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+        const script = document.createElement('script');
+        script.src = '../assets/js/main.js';
+        document.body.appendChild(script);
+      });
+
+    fetch('../components/footer.html')
+      .then(r => r.text())
+      .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+    let selectedAmount = 0;
+
+    function openDonateModal(caseName) {
+      document.getElementById('modalCaseName').textContent = caseName;
+      document.getElementById('donateModal').classList.add('active');
+    }
+
+    function closeDonateModal() {
+      document.getElementById('donateModal').classList.remove('active');
+    }
+
+    function selectAmount(btn, amount) {
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedAmount = amount;
+      const customInput = document.getElementById('customAmount');
+      customInput.style.display = amount === 0 ? 'block' : 'none';
+    }
+
+    function confirmDonation() {
+      const amount = selectedAmount || parseInt(document.getElementById('customAmount').value) || 0;
+      if (!amount) {
+        alert('Pilih atau masukkan nominal donasi!');
+        return;
+      }
+      closeDonateModal();
+      alert(`✅ Terima kasih atas donasimu sebesar Rp ${amount.toLocaleString('id-ID')}! 💜\n\nInstruksi pembayaran akan dikirim ke emailmu.`);
+    }
+
+    // Payment method selection
+    document.querySelectorAll('.payment-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Bot toggle
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>

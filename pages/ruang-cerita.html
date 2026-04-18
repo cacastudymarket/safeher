@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang Cerita — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .page-hero {
+      padding: 140px 0 60px;
+      background: linear-gradient(135deg, rgba(123,107,168,0.08), rgba(201,123,138,0.08));
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* LAYOUT */
+    .stories-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      padding: 60px 0;
+    }
+
+    /* WRITE STORY */
+    .write-story {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .write-story h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .write-story textarea {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 120px;
+      outline: none;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+    }
+
+    .write-story textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123,107,168,0.1);
+    }
+
+    .write-story input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .write-story input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123,107,168,0.1);
+    }
+
+    .write-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .category-select {
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .anonymous-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .anonymous-toggle input {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 50px;
+      border: 2px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    /* STORY CARDS */
+    .stories-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .story-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .story-card:hover {
+      box-shadow: 0 8px 30px var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .story-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .story-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .story-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .story-author h4 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .story-author span {
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    .story-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .story-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .story-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .story-reactions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .reaction-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: transparent;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+    }
+
+    .reaction-btn:hover {
+      background: rgba(123,107,168,0.1);
+      border-color: var(--primary);
+    }
+
+    .reaction-btn.active {
+      background: rgba(123,107,168,0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .category-item:hover {
+      background: rgba(123,107,168,0.1);
+    }
+
+    .category-item span {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .category-count {
+      background: rgba(123,107,168,0.15);
+      color: var(--primary);
+      padding: 2px 10px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+      .stories-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .write-options {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="badge badge-primary" style="margin-bottom:20px;display:inline-flex;">📖 Ruang Cerita</span>
+      <h1>Ceritamu Penting. <br>Kamu Tidak Sendirian.</h1>
+      <p>Bagikan pengalamanmu di sini secara anonim. Kami mendengarkan dan mendukungmu sepenuhnya. 💜</p>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section class="section">
+    <div class="container">
+      <div class="stories-layout">
+
+        <!-- LEFT: STORIES -->
+        <div>
+          <!-- WRITE STORY -->
+          <div class="write-story">
+            <h3>✍️ Bagikan Ceritamu</h3>
+            <input type="text" id="storyTitle" placeholder="Judul ceritamu...">
+            <textarea id="storyContent" placeholder="Ceritakan pengalamanmu di sini. Tempat ini aman dan penuh dukungan 💜"></textarea>
+            <div class="write-options">
+              <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                <select class="category-select" id="storyCategory">
+                  <option value="">📂 Pilih Kategori</option>
+                  <option value="catcalling">🗣️ Catcalling</option>
+                  <option value="kdrt">🏠 KDRT</option>
+                  <option value="pelecehan">⚠️ Pelecehan Seksual</option>
+                  <option value="diskriminasi">⚖️ Diskriminasi</option>
+                  <option value="stalking">👁️ Penguntitan</option>
+                  <option value="lainnya">📌 Lainnya</option>
+                </select>
+                <label class="anonymous-toggle">
+                  <input type="checkbox" id="isAnonymous" checked>
+                  🎭 Posting Anonim
+                </label>
+              </div>
+              <button class="btn btn-primary" onclick="postStory()">Bagikan Cerita 💜</button>
+            </div>
+          </div>
+
+          <!-- FILTER -->
+          <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterStories(this, 'semua')">Semua</button>
+            <button class="filter-btn" onclick="filterStories(this, 'terbaru')">🕐 Terbaru</button>
+            <button class="filter-btn" onclick="filterStories(this, 'catcalling')">🗣️ Catcalling</button>
+            <button class="filter-btn" onclick="filterStories(this, 'kdrt')">🏠 KDRT</button>
+            <button class="filter-btn" onclick="filterStories(this, 'pelecehan')">⚠️ Pelecehan</button>
+            <button class="filter-btn" onclick="filterStories(this, 'lainnya')">📌 Lainnya</button>
+          </div>
+
+          <!-- STORIES FEED -->
+          <div class="stories-feed" id="storiesFeed">
+
+            <div class="story-card" data-category="catcalling">
+              <div class="story-header">
+                <div class="story-author">
+                  <div class="story-avatar">A</div>
+                  <div>
+                    <h4>Anonim</h4>
+                    <span>2 jam lalu • 🗣️ Catcalling</span>
+                  </div>
+                </div>
+                <span class="badge badge-primary">🎭 Anonim</span>
+              </div>
+              <h3>Tidak Aman Pulang Sendiri</h3>
+              <p>Hari ini aku pulang kerja agak malam dan di jalan ada beberapa orang yang berteriak-teriak ke arahku. Rasanya sangat tidak nyaman dan takut. Aku berharap bisa pulang dengan aman tanpa harus merasa diawasi terus...</p>
+              <div class="story-footer">
+                <div class="story-reactions">
+                  <button class="reaction-btn" onclick="react(this)">💜 Hug <span>24</span></button>
+                  <button class="reaction-btn" onclick="react(this)">💪 Kuat <span>18</span></button>
+                  <button class="reaction-btn" onclick="react(this)">🙏 Dukung <span>31</span></button>
+                </div>
+                <button class="reaction-btn" style="color:#E53E3E">🚩 Laporkan</button>
+              </div>
+            </div>
+
+            <div class="story-card" data-category="kdrt">
+              <div class="story-header">
+                <div class="story-author">
+                  <div class="story-avatar">R</div>
+                  <div>
+                    <h4>Rina</h4>
+                    <span>5 jam lalu • 🏠 KDRT</span>
+                  </div>
+                </div>
+              </div>
+              <h3>Akhirnya Berani Bersuara</h3>
+              <p>Setelah 2 tahun dalam hubungan yang toxic, akhirnya aku menemukan keberanian untuk pergi. Ini bukan hal yang mudah, tapi aku tahu ini yang terbaik. Terima kasih SafeHer yang sudah membantuku menemukan jalan...</p>
+              <div class="story-footer">
+                <div class="story-reactions">
+                  <button class="reaction-btn" onclick="react(this)">💜 Hug <span>89</span></button>
+                  <button class="reaction-btn" onclick="react(this)">💪 Kuat <span>120</span></button>
+                  <button class="reaction-btn" onclick="react(this)">🙏 Dukung <span>95</span></button>
+                </div>
+                <button class="reaction-btn" style="color:#E53E3E">🚩 Laporkan</button>
+              </div>
+            </div>
+
+            <div class="story-card" data-category="diskriminasi">
+              <div class="story-header">
+                <div class="story-author">
+                  <div class="story-avatar">A</div>
+                  <div>
+                    <h4>Anonim</h4>
+                    <span>1 hari lalu • ⚖️ Diskriminasi</span>
+                  </div>
+                </div>
+                <span class="badge badge-primary">🎭 Anonim</span>
+              </div>
+              <h3>Diperlakukan Tidak Adil di Tempat Kerja</h3>
+              <p>Sudah 3 kali aku mengajukan promosi tapi selalu ditolak dengan alasan yang tidak jelas. Tapi rekan kerjaku yang laki-laki dengan pengalaman lebih sedikit malah dipromosikan. Rasanya sangat tidak adil...</p>
+              <div class="story-footer">
+                <div class="story-reactions">
+                  <button class="reaction-btn" onclick="react(this)">💜 Hug <span>45</span></button>
+                  <button class="reaction-btn" onclick="react(this)">💪 Kuat <span>67</span></button>
+                  <button class="reaction-btn" onclick="react(this)">🙏 Dukung <span>52</span></button>
+                </div>
+                <button class="reaction-btn" style="color:#E53E3E">🚩 Laporkan</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: SIDEBAR -->
+        <div class="sidebar">
+
+          <div class="sidebar-card">
+            <h3>📂 Kategori</h3>
+            <div class="category-list">
+              <div class="category-item">
+                <span>🗣️ Catcalling</span>
+                <span class="category-count">128</span>
+              </div>
+              <div class="category-item">
+                <span>🏠 KDRT</span>
+                <span class="category-count">89</span>
+              </div>
+              <div class="category-item">
+                <span>⚠️ Pelecehan Seksual</span>
+                <span class="category-count">204</span>
+              </div>
+              <div class="category-item">
+                <span>⚖️ Diskriminasi</span>
+                <span class="category-count">67</span>
+              </div>
+              <div class="category-item">
+                <span>👁️ Penguntitan</span>
+                <span class="category-count">43</span>
+              </div>
+              <div class="category-item">
+                <span>📌 Lainnya</span>
+                <span class="category-count">156</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>📋 Aturan Ruang Cerita</h3>
+            <div class="rules-list">
+              <div class="rule-item">
+                <span>💜</span>
+                <span>Saling menghormati dan mendukung satu sama lain</span>
+              </div>
+              <div class="rule-item">
+                <span>🔒</span>
+                <span>Jaga privasi — jangan sebutkan identitas orang lain</span>
+              </div>
+              <div class="rule-item">
+                <span>🚫</span>
+                <span>Dilarang menyalahkan korban (victim blaming)</span>
+              </div>
+              <div class="rule-item">
+                <span>🤝</span>
+                <span>Berikan dukungan, bukan penghakiman</span>
+              </div>
+              <div class="rule-item">
+                <span>🚩</span>
+                <span>Laporkan konten yang melanggar aturan</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card" style="background:linear-gradient(135deg,rgba(123,107,168,0.1),rgba(201,123,138,0.1))">
+            <h3>💜 Butuh Bantuan Lebih?</h3>
+            <p style="font-size:13px;color:var(--text-light);margin-bottom:16px;">Jika kamu membutuhkan bantuan profesional, konsultasikan dengan ahli kami.</p>
+            <a href="konsultasi.html" class="btn btn-primary" style="width:100%;justify-content:center;">Konsultasi Sekarang</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    fetch('../components/navbar.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+        const script = document.createElement('script');
+        script.src = '../assets/js/main.js';
+        document.body.appendChild(script);
+      });
+
+    fetch('../components/footer.html')
+      .then(r => r.text())
+      .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+    // Post Story
+    function postStory() {
+      const title = document.getElementById('storyTitle').value;
+      const content = document.getElementById('storyContent').value;
+      const category = document.getElementById('storyCategory').value;
+      const isAnon = document.getElementById('isAnonymous').checked;
+
+      if (!title || !content) {
+        alert('Judul dan cerita wajib diisi!');
+        return;
+      }
+
+      const feed = document.getElementById('storiesFeed');
+      const initial = isAnon ? 'A' : 'K';
+      const name = isAnon ? 'Anonim' : 'Kamu';
+      const catLabel = category || 'lainnya';
+
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      card.setAttribute('data-category', catLabel);
+      card.innerHTML = `
+        <div class="story-header">
+          <div class="story-author">
+            <div class="story-avatar">${initial}</div>
+            <div>
+              <h4>${name}</h4>
+              <span>Baru saja • 📌 ${catLabel}</span>
+            </div>
+          </div>
+          ${isAnon ? '<span class="badge badge-primary">🎭 Anonim</span>' : ''}
+        </div>
+        <h3>${title}</h3>
+        <p>${content}</p>
+        <div class="story-footer">
+          <div class="story-reactions">
+            <button class="reaction-btn" onclick="react(this)">💜 Hug <span>0</span></button>
+            <button class="reaction-btn" onclick="react(this)">💪 Kuat <span>0</span></button>
+            <button class="reaction-btn" onclick="react(this)">🙏 Dukung <span>0</span></button>
+          </div>
+          <button class="reaction-btn" style="color:#E53E3E">🚩 Laporkan</button>
+        </div>
+      `;
+      feed.prepend(card);
+
+      document.getElementById('storyTitle').value = '';
+      document.getElementById('storyContent').value = '';
+    }
+
+    // React
+    function react(btn) {
+      btn.classList.toggle('active');
+      const span = btn.querySelector('span');
+      const count = parseInt(span.textContent);
+      span.textContent = btn.classList.contains('active') ? count + 1 : count - 1;
+    }
+
+    // Filter
+    function filterStories(btn, category) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.story-card').forEach(card => {
+        if (category === 'semua' || category === 'terbaru') {
+          card.style.display = 'block';
+        } else {
+          card.style.display = card.dataset.category === category ? 'block' : 'none';
+        }
+      });
+    }
+
+    // Bot toggle
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>
