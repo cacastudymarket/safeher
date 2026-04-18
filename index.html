@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SafeHer — Empowering & Securing Women</title>
   <link rel="stylesheet" href="assets/css/style.css">
@@ -236,9 +237,6 @@
       .then(html => {
         document.getElementById('navbar-placeholder').innerHTML = html;
         // reinit after load
-        const script = document.createElement('script');
-        script.src = 'assets/js/main.js';
-        document.body.appendChild(script);
       });
 
     fetch('components/footer.html')
