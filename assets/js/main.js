@@ -107,7 +107,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ===== GEMINI BOT AI =====
-const GEMINI_API_KEY = 'MASUKKAN_API_KEY_GEMINI_KAMU';
 
 const SYSTEM_PROMPT = `Kamu adalah SafeHer AI, asisten virtual platform SafeHer yang membantu perempuan Indonesia.
 
