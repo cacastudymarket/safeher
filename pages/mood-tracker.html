@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Tracker — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .page-hero {
+      padding: 140px 0 60px;
+      background: linear-gradient(135deg, rgba(123,107,168,0.08), rgba(201,123,138,0.08));
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* LAYOUT */
+    .tracker-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      padding: 60px 0;
+    }
+
+    /* MOOD INPUT */
+    .mood-input-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .mood-input-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .mood-input-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      margin-bottom: 28px;
+    }
+
+    .mood-options {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .mood-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .mood-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .mood-btn.active {
+      border-color: var(--primary);
+      background: rgba(123,107,168,0.1);
+    }
+
+    .mood-emoji {
+      font-size: 2.5rem;
+    }
+
+    .mood-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .mood-score {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .mood-note {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+
+    .mood-note:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123,107,168,0.1);
+    }
+
+    /* MOOD HISTORY */
+    .mood-history h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-item {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .history-item:hover {
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .history-emoji {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .history-info {
+      flex: 1;
+    }
+
+    .history-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .history-info p {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .history-date {
+      font-size: 12px;
+      color: var(--text-light);
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .mood-tag {
+      display: inline-flex;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    /* CHART */
+    .mood-chart-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .mood-chart-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 120px;
+      margin-bottom: 8px;
+    }
+
+    .chart-bar-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .chart-bar {
+      width: 100%;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.5s ease;
+      min-height: 4px;
+    }
+
+    .chart-label {
+      font-size: 10px;
+      color: var(--text-light);
+    }
+
+    .chart-emoji {
+      font-size: 14px;
+    }
+
+    /* SIDEBAR */
+    .mood-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    /* STREAK */
+    .streak-display {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(123,107,168,0.1), rgba(201,123,138,0.1));
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+    }
+
+    .streak-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .streak-label {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .streak-days {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .streak-day {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .streak-day.done {
+      background: var(--primary);
+      color: white;
+    }
+
+    .streak-day.today {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .streak-day.empty {
+      background: var(--border);
+      color: var(--text-light);
+    }
+
+    /* TIPS */
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tip-item {
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* STATS */
+    .mood-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mood-stat {
+      text-align: center;
+      padding: 12px;
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+
+    .mood-stat h4 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .mood-stat p {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 1024px) {
+      .tracker-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mood-options {
+        gap: 10px;
+      }
+
+      .mood-btn {
+        padding: 12px 14px;
+      }
+
+      .mood-emoji {
+        font-size: 2rem;
+      }
+
+      .page-hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="badge badge-primary" style="margin-bottom:20px;display:inline-flex;">📊 Mood Tracker</span>
+      <h1>Pantau Kesehatan <br>Mentalmu 💜</h1>
+      <p>Catat mood harianmu untuk membantu memahami perasaanmu. Data ini hanya bisa dilihat oleh kamu sendiri.</p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="tracker-layout">
+
+        <!-- LEFT -->
+        <div>
+          <!-- MOOD INPUT -->
+          <div class="mood-input-card">
+            <h2>Bagaimana perasaanmu hari ini? 💜</h2>
+            <p>Pilih mood yang paling menggambarkan perasaanmu sekarang</p>
+
+            <div class="mood-options">
+              <button class="mood-btn" onclick="selectMood(this, '😄', 'Sangat Baik', 5, '#48BB78')" data-mood="5">
+                <span class="mood-emoji">😄</span>
+                <span class="mood-label">Sangat Baik</span>
+                <span class="mood-score">5/5</span>
+              </button>
+              <button class="mood-btn" onclick="selectMood(this, '🙂', 'Baik', 4, '#68D391')" data-mood="4">
+                <span class="mood-emoji">🙂</span>
+                <span class="mood-label">Baik</span>
+                <span class="mood-score">4/5</span>
+              </button>
+              <button class="mood-btn" onclick="selectMood(this, '😐', 'Biasa', 3, '#F6E05E')" data-mood="3">
+                <span class="mood-emoji">😐</span>
+                <span class="mood-label">Biasa</span>
+                <span class="mood-score">3/5</span>
+              </button>
+              <button class="mood-btn" onclick="selectMood(this, '😔', 'Kurang Baik', 2, '#FC8181')" data-mood="2">
+                <span class="mood-emoji">😔</span>
+                <span class="mood-label">Kurang Baik</span>
+                <span class="mood-score">2/5</span>
+              </button>
+              <button class="mood-btn" onclick="selectMood(this, '😢', 'Sangat Buruk', 1, '#E53E3E')" data-mood="1">
+                <span class="mood-emoji">😢</span>
+                <span class="mood-label">Sangat Buruk</span>
+                <span class="mood-score">1/5</span>
+              </button>
+            </div>
+
+            <textarea class="mood-note" id="moodNote" placeholder="Ceritakan lebih lanjut tentang perasaanmu hari ini (opsional)..."></textarea>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveMood()">
+              💜 Simpan Mood Hari Ini
+            </button>
+          </div>
+
+          <!-- CHART -->
+          <div class="mood-chart-card">
+            <h3>📈 Grafik Mood 7 Hari Terakhir</h3>
+            <div class="chart-bars" id="moodChart"></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-light);margin-top:4px" id="chartLabels"></div>
+          </div>
+
+          <!-- HISTORY -->
+          <div class="mood-history">
+            <h2>📅 Riwayat Mood</h2>
+            <div class="history-list" id="historyList">
+              <div class="history-item">
+                <div class="history-emoji">🙂</div>
+                <div class="history-info">
+                  <h4>Baik</h4>
+                  <p>Hari ini lumayan baik, bisa istirahat cukup dan makan enak.</p>
+                  <span class="mood-tag" style="background:rgba(104,211,145,0.2);color:#276749">Baik • 4/5</span>
+                </div>
+                <div class="history-date">Kemarin<br>20:30</div>
+              </div>
+
+              <div class="history-item">
+                <div class="history-emoji">😔</div>
+                <div class="history-info">
+                  <h4>Kurang Baik</h4>
+                  <p>Merasa lelah dan overthinking tentang banyak hal.</p>
+                  <span class="mood-tag" style="background:rgba(252,129,129,0.2);color:#C53030">Kurang Baik • 2/5</span>
+                </div>
+                <div class="history-date">2 hari lalu<br>21:00</div>
+              </div>
+
+              <div class="history-item">
+                <div class="history-emoji">😄</div>
+                <div class="history-info">
+                  <h4>Sangat Baik</h4>
+                  <p>Hari yang menyenangkan! Bertemu teman-teman dan tertawa banyak.</p>
+                  <span class="mood-tag" style="background:rgba(72,187,120,0.2);color:#276749">Sangat Baik • 5/5</span>
+                </div>
+                <div class="history-date">3 hari lalu<br>19:45</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="mood-sidebar">
+
+          <!-- STREAK -->
+          <div class="sidebar-card">
+            <h3>🔥 Streak Harian</h3>
+            <div class="streak-display">
+              <div class="streak-number" id="streakNum">3</div>
+              <div class="streak-label">hari berturut-turut</div>
+            </div>
+            <div class="streak-days">
+              <div class="streak-day done">S</div>
+              <div class="streak-day done">M</div>
+              <div class="streak-day done">S</div>
+              <div class="streak-day today">R</div>
+              <div class="streak-day empty">K</div>
+              <div class="streak-day empty">J</div>
+              <div class="streak-day empty">S</div>
+            </div>
+          </div>
+
+          <!-- STATS -->
+          <div class="sidebar-card">
+            <h3>📊 Statistik Bulan Ini</h3>
+            <div class="mood-stats">
+              <div class="mood-stat">
+                <h4>😄</h4>
+                <p>Mood terbaik</p>
+              </div>
+              <div class="mood-stat">
+                <h4 id="avgMood">3.8</h4>
+                <p>Rata-rata mood</p>
+              </div>
+              <div class="mood-stat">
+                <h4>18</h4>
+                <p>Total entri</p>
+              </div>
+              <div class="mood-stat">
+                <h4>72%</h4>
+                <p>Hari positif</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- REKOMENDASI -->
+          <div class="sidebar-card">
+            <h3>💡 Rekomendasi Untukmu</h3>
+            <div class="tips-list" id="moodTips">
+              <div class="tip-item">
+                <span>🧘</span>
+                <span>Coba meditasi 10 menit untuk menenangkan pikiran</span>
+              </div>
+              <div class="tip-item">
+                <span>📖</span>
+                <span>Tulis jurnal perasaanmu di Ruang Cerita SafeHer</span>
+              </div>
+              <div class="tip-item">
+                <span>💬</span>
+                <span>Jika merasa berat, konsultasikan dengan psikolog kami</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KONSULTASI CTA -->
+          <div class="sidebar-card" style="background:linear-gradient(135deg,rgba(123,107,168,0.1),rgba(201,123,138,0.1))">
+            <h3>🧠 Butuh Bantuan Profesional?</h3>
+            <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">Jika mood kamu sering buruk, konsultasikan dengan psikolog atau psikiater kami.</p>
+            <a href="konsultasi.html" class="btn btn-primary" style="width:100%;justify-content:center">Konsultasi Sekarang</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/bot-config.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    fetch('../components/navbar.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+      });
+
+    fetch('../components/footer.html')
+      .then(r => r.text())
+      .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+    // MOOD DATA
+    let selectedMoodData = null;
+    const moodHistory = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+
+    function selectMood(btn, emoji, label, score, color) {
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMoodData = { emoji, label, score, color };
+    }
+
+    function saveMood() {
+      if (!selectedMoodData) {
+        alert('Pilih mood dulu ya! 💜');
+        return;
+      }
+
+      const note = document.getElementById('moodNote').value;
+      const now = new Date();
+      const entry = {
+        ...selectedMoodData,
+        note,
+        date: now.toLocaleDateString('id-ID'),
+        time: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        timestamp: now.getTime()
+      };
+
+      moodHistory.unshift(entry);
+      localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+
+      // Add to history list
+      addToHistory(entry, true);
+      updateChart();
+      updateTips(selectedMoodData.score);
+
+      document.getElementById('moodNote').value = '';
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+      selectedMoodData = null;
+
+      alert('✅ Mood berhasil disimpan! 💜');
+    }
+
+    function addToHistory(entry, prepend = false) {
+      const list = document.getElementById('historyList');
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML = `
+        <div class="history-emoji">${entry.emoji}</div>
+        <div class="history-info">
+          <h4>${entry.label}</h4>
+          <p>${entry.note || 'Tidak ada catatan'}</p>
+          <span class="mood-tag" style="background:${entry.color}33;color:${entry.color}">${entry.label} • ${entry.score}/5</span>
+        </div>
+        <div class="history-date">${entry.date}<br>${entry.time}</div>
+      `;
+      if (prepend) {
+        list.prepend(item);
+      } else {
+        list.appendChild(item);
+      }
+    }
+
+    function updateChart() {
+      const chart = document.getElementById('moodChart');
+      const labels = document.getElementById('chartLabels');
+      chart.innerHTML = '';
+      labels.innerHTML = '';
+
+      const days = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+      const colors = ['#E53E3E', '#FC8181', '#F6E05E', '#68D391', '#48BB78'];
+      const sampleData = [4, 2, 5, 3, 4, 2, 4];
+
+      sampleData.forEach((score, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'chart-bar-wrapper';
+
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar';
+        bar.style.height = (score / 5 * 100) + '%';
+        bar.style.background = colors[score - 1];
+
+        const label = document.createElement('div');
+        label.className = 'chart-label';
+        label.textContent = days[i];
+
+        wrapper.appendChild(bar);
+        wrapper.appendChild(label);
+        chart.appendChild(wrapper);
+      });
+    }
+
+    function updateTips(score) {
+      const tips = document.getElementById('moodTips');
+      const tipsByMood = {
+        5: [
+          { icon: '🎉', text: 'Keren! Bagikan energi positifmu di komunitas SafeHer' },
+          { icon: '📝', text: 'Catat hal-hal yang membuatmu bahagia hari ini' },
+          { icon: '🤝', text: 'Jadilah buddy untuk perempuan lain yang butuh dukungan' }
+        ],
+        4: [
+          { icon: '🌸', text: 'Pertahankan mood baikmu dengan self-care rutin' },
+          { icon: '📖', text: 'Baca artikel edukasi untuk menambah pengetahuan' },
+          { icon: '💬', text: 'Bagikan pengalaman positifmu di Ruang Cerita' }
+        ],
+        3: [
+          { icon: '🧘', text: 'Coba meditasi 10 menit untuk menenangkan pikiran' },
+          { icon: '🚶', text: 'Jalan-jalan sebentar untuk menyegarkan pikiran' },
+          { icon: '📱', text: 'Hubungi teman atau keluarga untuk ngobrol' }
+        ],
+        2: [
+          { icon: '💜', text: 'Ingat: perasaanmu valid. Kamu tidak sendirian' },
+          { icon: '🛁', text: 'Istirahat yang cukup dan lakukan hal yang kamu suka' },
+          { icon: '💬', text: 'Pertimbangkan konsultasi dengan psikolog kami' }
+        ],
+        1: [
+          { icon: '🆘', text: 'Jika dalam krisis, hubungi hotline SAPA: 129' },
+          { icon: '💜', text: 'Ceritakan perasaanmu di Ruang Cerita, kami mendengarkan' },
+          { icon: '👩‍⚕️', text: 'Sangat disarankan konsultasi dengan psikolog sekarang' }
+        ]
+      };
+
+      const selectedTips = tipsByMood[score] || tipsByMood[3];
+      tips.innerHTML = selectedTips.map(t => `
+        <div class="tip-item">
+          <span>${t.icon}</span>
+          <span>${t.text}</span>
+        </div>
+      `).join('');
+    }
+
+    // Init chart
+    updateChart();
+
+    // Load history from localStorage
+    moodHistory.forEach(entry => addToHistory(entry));
+
+    // Bot toggle
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle?.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>

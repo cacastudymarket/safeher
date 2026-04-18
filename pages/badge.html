@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badge & Apresiasi — SafeHer</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dark-mode.css">
+  <link rel="icon" href="../assets/images/logo.png">
+  <style>
+    .page-hero {
+      padding: 140px 0 60px;
+      background: linear-gradient(135deg, rgba(123,107,168,0.08), rgba(201,123,138,0.08));
+      text-align: center;
+    }
+
+    .page-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* PROFILE */
+    .profile-card {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .profile-info h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-info p {
+      font-size: 14px;
+      opacity: 0.85;
+      margin-bottom: 12px;
+    }
+
+    .profile-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .profile-stat {
+      text-align: center;
+    }
+
+    .profile-stat h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .profile-stat p {
+      font-size: 12px;
+      opacity: 0.8;
+      margin: 0;
+    }
+
+    /* LEVEL */
+    .level-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .level-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .level-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .level-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .level-progress {
+      height: 12px;
+      background: var(--border);
+      border-radius: 50px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .level-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 50px;
+      transition: width 1s ease;
+    }
+
+    .level-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-light);
+    }
+
+    /* BADGES LAYOUT */
+    .badges-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+    }
+
+    /* BADGES GRID */
+    .badges-section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .badge-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 2px solid var(--border);
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge-card.unlocked {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(123,107,168,0.05), rgba(201,123,138,0.05));
+    }
+
+    .badge-card.unlocked:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px var(--shadow);
+    }
+
+    .badge-card.locked {
+      opacity: 0.5;
+      filter: grayscale(1);
+    }
+
+    .badge-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .badge-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .badge-card p {
+      font-size: 11px;
+      color: var(--text-light);
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .badge-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .badge-status.unlocked {
+      background: rgba(72,187,120,0.15);
+      color: #276749;
+    }
+
+    .badge-status.locked {
+      background: var(--border);
+      color: var(--text-light);
+    }
+
+    .badge-new {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--secondary);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* LEADERBOARD */
+    .leaderboard-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .leaderboard-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .leaderboard-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      transition: all 0.3s ease;
+    }
+
+    .leaderboard-item:hover {
+      background: rgba(123,107,168,0.08);
+    }
+
+    .leaderboard-item.me {
+      background: rgba(123,107,168,0.1);
+      border: 1px solid var(--primary);
+    }
+
+    .rank-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .rank-1 { background: #F6E05E; color: #744210; }
+    .rank-2 { background: #E2E8F0; color: #4A5568; }
+    .rank-3 { background: #FBD38D; color: #744210; }
+    .rank-other { background: var(--border); color: var(--text-light); }
+
+    .leaderboard-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .leaderboard-info {
+      flex: 1;
+    }
+
+    .leaderboard-info h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .leaderboard-info p {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+
+    .leaderboard-points {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* ACTIVITY */
+    .activity-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .activity-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-light);
+      padding: 8px;
+      border-radius: var(--radius);
+      background: var(--bg);
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(123,107,168,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .activity-points {
+      margin-left: auto;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    @media (max-width: 1024px) {
+      .badges-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .badges-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .profile-stats {
+        justify-content: center;
+      }
+
+      .page-hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <span class="badge badge-primary" style="margin-bottom:20px;display:inline-flex;">🏅 Badge & Apresiasi</span>
+      <h1>Rayakan Perjalananmu <br>Bersama SafeHer 💜</h1>
+      <p>Kumpulkan badge sebagai apresiasi atas kontribusi dan perjalananmu di komunitas SafeHer.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+
+      <!-- PROFILE -->
+      <div class="profile-card">
+        <div class="profile-avatar">C</div>
+        <div class="profile-info">
+          <h2>Cahya Ratri 💜</h2>
+          <p>Member SafeHer sejak April 2024 • Jakarta</p>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <h3>8</h3>
+              <p>Badge</p>
+            </div>
+            <div class="profile-stat">
+              <h3>1.240</h3>
+              <p>Poin</p>
+            </div>
+            <div class="profile-stat">
+              <h3>#12</h3>
+              <p>Peringkat</p>
+            </div>
+            <div class="profile-stat">
+              <h3>23</h3>
+              <p>Kontribusi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEVEL -->
+      <div class="level-card">
+        <div class="level-header">
+          <h3>⭐ Level Kamu</h3>
+          <div class="level-badge">🌟 Pejuang SafeHer</div>
+        </div>
+        <div class="level-progress">
+          <div class="level-fill" style="width: 68%"></div>
+        </div>
+        <div class="level-info">
+          <span>1.240 / 1.800 poin</span>
+          <span>Level berikutnya: 🔥 Guardian SafeHer</span>
+        </div>
+      </div>
+
+      <!-- BADGES LAYOUT -->
+      <div class="badges-layout">
+        <div class="badges-section">
+
+          <!-- UNLOCKED -->
+          <h2>🏅 Badge Kamu (8 badge)</h2>
+          <div class="badges-grid">
+
+            <div class="badge-card unlocked">
+              <div class="badge-new">BARU!</div>
+              <span class="badge-icon">🌟</span>
+              <h4>Bintang Komunitas</h4>
+              <p>Aktif berkontribusi di forum selama 7 hari berturut-turut</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">💜</span>
+              <h4>Pendengar Setia</h4>
+              <p>Memberikan 50+ reaksi dukungan di Ruang Cerita</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">🛡️</span>
+              <h4>Penjaga SafeHer</h4>
+              <p>Melaporkan 3+ kejadian di Safety Map</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">📚</span>
+              <h4>Pencari Ilmu</h4>
+              <p>Membaca 10+ artikel di Pusat Edukasi</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">🤝</span>
+              <h4>Buddy Terpercaya</h4>
+              <p>Menyelesaikan 5+ sesi buddy system</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">💝</span>
+              <h4>Dermawan</h4>
+              <p>Berdonasi untuk membantu sesama perempuan</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">📊</span>
+              <h4>Konsisten</h4>
+              <p>Mencatat mood selama 7 hari berturut-turut</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+
+            <div class="badge-card unlocked">
+              <span class="badge-icon">🎯</span>
+              <h4>Suara Berani</h4>
+              <p>Berbagi cerita pertama di Ruang Cerita</p>
+              <span class="badge-status unlocked">✅ Terbuka</span>
+            </div>
+          </div>
+
+          <!-- LOCKED -->
+          <h2>🔒 Badge Belum Terbuka</h2>
+          <div class="badges-grid">
+            <div class="badge-card locked">
+              <span class="badge-icon">🔥</span>
+              <h4>Guardian SafeHer</h4>
+              <p>Capai 1.800 poin untuk membuka badge ini</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+
+            <div class="badge-card locked">
+              <span class="badge-icon">👑</span>
+              <h4>Ratu Komunitas</h4>
+              <p>Raih peringkat #1 di leaderboard bulanan</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+
+            <div class="badge-card locked">
+              <span class="badge-icon">🌈</span>
+              <h4>Pelopor Perubahan</h4>
+              <p>Mengajak 10+ teman bergabung ke SafeHer</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+
+            <div class="badge-card locked">
+              <span class="badge-icon">⚡</span>
+              <h4>Super Aktif</h4>
+              <p>Login dan berkontribusi selama 30 hari berturut-turut</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+
+            <div class="badge-card locked">
+              <span class="badge-icon">🎓</span>
+              <h4>Ahli Pengetahuan</h4>
+              <p>Selesaikan semua kuis edukasi dengan skor sempurna</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+
+            <div class="badge-card locked">
+              <span class="badge-icon">🌸</span>
+              <h4>Bunga Harapan</h4>
+              <p>Membantu 20+ member lain melalui forum dan buddy system</p>
+              <span class="badge-status locked">🔒 Terkunci</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div>
+          <!-- LEADERBOARD -->
+          <div class="leaderboard-card">
+            <h3>🏆 Leaderboard Bulan Ini</h3>
+            <div class="leaderboard-list">
+              <div class="leaderboard-item">
+                <div class="rank-num rank-1">1</div>
+                <div class="leaderboard-avatar">R</div>
+                <div class="leaderboard-info">
+                  <h4>Rina S.</h4>
+                  <p>🏅 12 badge</p>
+                </div>
+                <div class="leaderboard-points">2.840</div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="rank-num rank-2">2</div>
+                <div class="leaderboard-avatar">D</div>
+                <div class="leaderboard-info">
+                  <h4>Dina M.</h4>
+                  <p>🏅 10 badge</p>
+                </div>
+                <div class="leaderboard-points">2.310</div>
+              </div>
+              <div class="leaderboard-item">
+                <div class="rank-num rank-3">3</div>
+                <div class="leaderboard-avatar">S</div>
+                <div class="leaderboard-info">
+                  <h4>Sarah K.</h4>
+                  <p>🏅 9 badge</p>
+                </div>
+                <div class="leaderboard-points">1.980</div>
+              </div>
+              <div class="leaderboard-item me">
+                <div class="rank-num rank-other">12</div>
+                <div class="leaderboard-avatar">C</div>
+                <div class="leaderboard-info">
+                  <h4>Kamu 💜</h4>
+                  <p>🏅 8 badge</p>
+                </div>
+                <div class="leaderboard-points">1.240</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARA DAPAT POIN -->
+          <div class="activity-card">
+            <h3>💡 Cara Dapat Poin</h3>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">📖</div>
+                <span>Bagikan cerita</span>
+                <span class="activity-points">+50 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">💜</div>
+                <span>Beri reaksi dukungan</span>
+                <span class="activity-points">+5 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">🗺️</div>
+                <span>Lapor di Safety Map</span>
+                <span class="activity-points">+30 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">🤝</div>
+                <span>Jadi buddy</span>
+                <span class="activity-points">+40 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">📊</div>
+                <span>Catat mood harian</span>
+                <span class="activity-points">+10 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">💝</div>
+                <span>Donasi</span>
+                <span class="activity-points">+100 poin</span>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon">🎯</div>
+                <span>Selesaikan kuis</span>
+                <span class="activity-points">+20 poin</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <!-- BOT AI -->
+  <button id="botToggle" class="bot-toggle">🤖</button>
+  <div id="botChat" class="bot-chat card">
+    <div class="bot-header">
+      <h4>🤖 SafeHer AI</h4>
+      <button onclick="document.getElementById('botChat').classList.remove('active')">✕</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+      <div class="bot-message">Halo! Aku SafeHer AI 💜 Ada yang bisa aku bantu?</div>
+    </div>
+    <div class="bot-input">
+      <input type="text" id="botInput" placeholder="Ketik pesanmu...">
+      <button id="botSend">➤</button>
+    </div>
+  </div>
+
+  <script src="../assets/js/bot-config.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    fetch('../components/navbar.html')
+      .then(r => r.text())
+      .then(html => {
+        document.getElementById('navbar-placeholder').innerHTML = html;
+      });
+
+    fetch('../components/footer.html')
+      .then(r => r.text())
+      .then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+    const botToggle = document.getElementById('botToggle');
+    const botChat = document.getElementById('botChat');
+    botToggle?.addEventListener('click', () => botChat.classList.toggle('active'));
+  </script>
+</body>
+</html>
