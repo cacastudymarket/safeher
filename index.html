@@ -238,12 +238,6 @@
     document.getElementById('navbar-placeholder').innerHTML = html;
   });
 
-fetch('/safeher/components/footer.html')
-  .then(r => r.text())
-  .then(html => document.getElementById('footer-placeholder').innerHTML = html);
-        // reinit after load
-      });
-
     fetch('components/footer.html')
       .then(r => r.text())
       .then(html => document.getElementById('footer-placeholder').innerHTML = html);
