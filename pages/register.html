@@ -2,12 +2,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://generativelanguage.googleapis.com https://unpkg.com https://*.tile.openstreetmap.org;">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar — SafeHer</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/dark-mode.css">
-  <link rel="icon" href="../assets/images/logo.png">
+  <link rel="stylesheet" href="/safeher/assets/css/style.css">
+  <link rel="stylesheet" href="/safeher/assets/css/dark-mode.css">
+  <link rel="icon" href="/safeher/assets/images/logo.png">
   <style>
     .auth-page {
       min-height: 100vh;
@@ -142,7 +142,6 @@
       margin-bottom: 24px;
     }
 
-    /* ROLE SELECTOR */
     .role-selector {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -154,9 +153,11 @@
       padding: 16px;
       border-radius: var(--radius-lg);
       border: 2px solid var(--border);
-      cursor: pointer;
+      cursor: pointer !important;
       transition: all 0.3s ease;
       text-align: center;
+      pointer-events: all !important;
+      user-select: none;
     }
 
     .role-card:hover {
@@ -171,6 +172,7 @@
     .role-icon {
       font-size: 2rem;
       margin-bottom: 8px;
+      pointer-events: none;
     }
 
     .role-card h4 {
@@ -178,12 +180,14 @@
       font-weight: 600;
       color: var(--text);
       margin-bottom: 4px;
+      pointer-events: none;
     }
 
     .role-card p {
       font-size: 11px;
       color: var(--text-light);
       line-height: 1.4;
+      pointer-events: none;
     }
 
     .form-group {
@@ -229,6 +233,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: 16px;
+      pointer-events: none;
     }
 
     .input-toggle {
@@ -242,7 +247,6 @@
       font-size: 16px;
     }
 
-    /* EXPERT FIELDS */
     .expert-fields {
       display: none;
       background: rgba(123,107,168,0.05);
@@ -263,7 +267,6 @@
       margin-bottom: 14px;
     }
 
-    /* UPLOAD */
     .upload-area {
       border: 2px dashed var(--border);
       border-radius: var(--radius);
@@ -285,7 +288,6 @@
       margin-top: 8px;
     }
 
-    /* TERMS */
     .terms-check {
       display: flex;
       align-items: flex-start;
@@ -306,7 +308,6 @@
       color: var(--primary);
     }
 
-    /* GENDER WARNING */
     .gender-warning {
       display: none;
       background: rgba(229,62,62,0.08);
@@ -322,7 +323,6 @@
       display: block;
     }
 
-    /* PROGRESS STEPS */
     .form-steps {
       display: flex;
       gap: 8px;
@@ -376,7 +376,7 @@
     <div class="auth-left">
       <div class="auth-left-content">
         <div class="auth-logo">
-          <img src="../assets/images/logo.png" alt="SafeHer">
+          <img src="/safeher/assets/images/logo.png" alt="SafeHer">
           SafeHer
         </div>
         <p class="auth-tagline">Empowering & Securing Women</p>
@@ -420,7 +420,6 @@
         <h2>Bergabung dengan SafeHer 💜</h2>
         <p class="subtitle">Buat akun dan mulai perjalananmu bersama kami</p>
 
-        <!-- PROGRESS -->
         <div class="form-steps">
           <div class="form-step active"></div>
           <div class="form-step active"></div>
@@ -428,7 +427,6 @@
           <div class="form-step"></div>
         </div>
 
-        <!-- ROLE SELECTOR -->
         <p style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">Daftar sebagai:</p>
         <div class="role-selector">
           <div class="role-card active" id="roleMember" onclick="selectRole('member')">
@@ -443,7 +441,6 @@
           </div>
         </div>
 
-        <!-- BASIC FIELDS -->
         <div class="form-group">
           <label>Nama Lengkap</label>
           <div class="input-wrapper">
@@ -480,7 +477,6 @@
           </div>
         </div>
 
-        <!-- GENDER WARNING -->
         <div class="gender-warning" id="genderWarning">
           ⚠️ SafeHer adalah platform khusus perempuan. Kamu tetap bisa bergabung sebagai <strong>Ahli atau Relawan</strong> untuk membantu komunitas kami.
         </div>
@@ -503,10 +499,8 @@
           </div>
         </div>
 
-        <!-- EXPERT FIELDS -->
         <div class="expert-fields" id="expertFields">
           <h4>📋 Data Profesional (Wajib untuk Ahli)</h4>
-
           <div class="form-group">
             <label>Bidang Keahlian</label>
             <div class="input-wrapper">
@@ -519,7 +513,6 @@
               </select>
             </div>
           </div>
-
           <div class="form-group">
             <label>Nomor STR / SIP / Lisensi</label>
             <div class="input-wrapper">
@@ -527,7 +520,6 @@
               <input type="text" placeholder="Nomor lisensi profesional">
             </div>
           </div>
-
           <div class="form-group">
             <label>Lokasi Praktik</label>
             <div class="input-wrapper">
@@ -535,19 +527,16 @@
               <input type="text" placeholder="Kota / Alamat praktik">
             </div>
           </div>
-
           <div class="upload-area" onclick="document.getElementById('uploadDoc').click()">
             <span style="font-size:2rem">📄</span>
             <p>Upload Dokumen Verifikasi<br><small>(KTP + Ijazah/SIP/STR)</small></p>
             <input type="file" id="uploadDoc" style="display:none" accept=".pdf,.jpg,.png" multiple>
           </div>
-
           <div style="background:rgba(196,164,74,0.1);border-radius:var(--radius);padding:12px;font-size:12px;color:var(--accent)">
             ⏳ Akun ahli akan aktif setelah verifikasi dokumen oleh tim SafeHer (1-3 hari kerja)
           </div>
         </div>
 
-        <!-- KTP UPLOAD -->
         <div class="form-group" id="ktpUpload">
           <label>Upload KTP / Identitas</label>
           <div class="upload-area" onclick="document.getElementById('uploadKTP').click()">
@@ -557,7 +546,6 @@
           </div>
         </div>
 
-        <!-- TERMS -->
         <label class="terms-check">
           <input type="checkbox" id="agreeTerms">
           Saya menyetujui <a href="#">Syarat & Ketentuan</a> dan <a href="#">Kebijakan Privasi</a> SafeHer. Saya memahami bahwa SafeHer adalah platform khusus perempuan.
@@ -568,7 +556,7 @@
         </button>
 
         <div class="auth-switch">
-          Sudah punya akun? <a href="login.html">Masuk di sini</a>
+          Sudah punya akun? <a href="/safeher/pages/login.html">Masuk di sini</a>
         </div>
       </div>
     </div>
@@ -590,8 +578,8 @@
     </div>
   </div>
 
-  <script src="../assets/js/bot-config.js"></script>
-  <script src="../assets/js/main.js"></script>
+  <script src="/safeher/assets/js/bot-config.js"></script>
+  <script src="/safeher/assets/js/main.js"></script>
   <script>
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
@@ -600,16 +588,28 @@
 
     function selectRole(role) {
       currentRole = role;
-      document.getElementById('roleMember').classList.toggle('active', role === 'member');
-      document.getElementById('roleExpert').classList.toggle('active', role === 'expert');
-      document.getElementById('expertFields').classList.toggle('active', role === 'expert');
+      const memberCard = document.getElementById('roleMember');
+      const expertCard = document.getElementById('roleExpert');
+      const expertFields = document.getElementById('expertFields');
+      const ktpUpload = document.getElementById('ktpUpload');
+
+      if (role === 'member') {
+        memberCard.classList.add('active');
+        expertCard.classList.remove('active');
+        expertFields.classList.remove('active');
+        ktpUpload.style.display = 'block';
+      } else {
+        expertCard.classList.add('active');
+        memberCard.classList.remove('active');
+        expertFields.classList.add('active');
+        ktpUpload.style.display = 'none';
+      }
     }
 
     function checkGender(select) {
       const warning = document.getElementById('genderWarning');
       if (select.value === 'laki') {
         warning.classList.add('active');
-        // Auto switch to expert role
         selectRole('expert');
       } else {
         warning.classList.remove('active');
@@ -665,7 +665,6 @@
       window.location.href = 'login.html';
     }
 
-    // Bot toggle
     const botToggle = document.getElementById('botToggle');
     const botChat = document.getElementById('botChat');
     botToggle.addEventListener('click', () => botChat.classList.toggle('active'));

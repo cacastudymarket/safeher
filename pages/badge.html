@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Badge & Apresiasi — SafeHer</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/dark-mode.css">
-  <link rel="icon" href="../assets/images/logo.png">
+  <link rel="stylesheet" href="/safeher/assets/css/style.css">
+  <link rel="stylesheet" href="/safeher/assets/css/dark-mode.css">
+  <link rel="icon" href="/safeher/assets/images/logo.png">
   <style>
     .page-hero {
       padding: 140px 0 60px;
@@ -689,16 +689,16 @@
     </div>
   </div>
 
-  <script src="../assets/js/bot-config.js"></script>
-  <script src="../assets/js/main.js"></script>
+  <script src="/safeher/assets/js/bot-config.js"></script>
+  <script src="/safeher/assets/js/main.js"></script>
   <script>
-    fetch('../components/navbar.html')
+    fetch('/safeher/components/navbar.html')
       .then(r => r.text())
       .then(html => {
         document.getElementById('navbar-placeholder').innerHTML = html;
       });
 
-    fetch('../components/footer.html')
+    fetch('/safeher/components/footer.html')
       .then(r => r.text())
       .then(html => document.getElementById('footer-placeholder').innerHTML = html);
 
